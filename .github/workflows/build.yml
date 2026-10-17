@@ -1,17 +1,31 @@
 name: Build Android NDK Plugin
-on: [push, workflow_dispatch]
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Setup NDK
       uses: nttld/setup-ndk@v1
       with:
-        ndk-version: r25c # 可根据需要调整
-    - name: Build
+        ndk-version: r21e # 尝试一个兼容性较广的版本
+
+    - name: Build with ndk-build
       run: |
-        ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk
+        echo "=== 开始编译 ==="
+        ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk || {
+          echo "=== 编译失败，以下为详细错误信息 ==="
+          ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk V=1
+          exit 1
+        }
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
