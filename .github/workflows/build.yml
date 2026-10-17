@@ -16,7 +16,13 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: RusJJ/AndroidModLoader
-        path: aml-sdk  # 下载到当前目录下的 aml-sdk 文件夹
+        path: aml-sdk
+
+    - name: Checkout SAUtils SDK
+      uses: actions/checkout@v4
+      with:
+        repository: AndroidModLoader/SAUtils
+        path: sautils-sdk
 
     - name: Setup NDK
       uses: nttld/setup-ndk@v1
@@ -26,10 +32,10 @@ jobs:
     - name: Build with ndk-build
       run: |
         echo "=== 开始编译 ==="
-        # 通过 APP_CFLAGS 告诉编译器包含 aml-sdk 里的头文件目录
-        ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk APP_CFLAGS="-I$(pwd)/aml-sdk" || {
+        # 关键：同时包含 AML SDK 和 SAUtils SDK 两个头文件目录
+        ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk APP_CFLAGS="-I$(pwd)/aml-sdk -I$(pwd)/sautils-sdk" || {
           echo "=== 编译失败，以下为详细错误信息 ==="
-          ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk APP_CFLAGS="-I$(pwd)/aml-sdk" V=1
+          ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk APP_CFLAGS="-I$(pwd)/aml-sdk -I$(pwd)/sautils-sdk" V=1
           exit 1
         }
 
