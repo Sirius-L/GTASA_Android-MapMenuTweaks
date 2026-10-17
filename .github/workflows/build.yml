@@ -29,11 +29,6 @@ jobs:
       with:
         ndk-version: r21e
 
-    - name: Fix main.cpp include paths
-      run: |
-        # 原作者写的是 <mod/amlmod.h>，但实际 SDK 在根目录，这里用 sed 自动替换掉错误的路径
-        sed -i 's|#include <mod/|#include <|g' main.cpp
-
     - name: Build with ndk-build
       run: |
         echo "=== 开始编译 ==="
