@@ -2,6 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/aml-sdk
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/sautils-sdk
 LOCAL_CPP_EXTENSION := .cpp .cc
 LOCAL_MODULE    := MapMenuTweaks
 LOCAL_SRC_FILES := main.cpp mod/logger.cpp mod/config.cpp
